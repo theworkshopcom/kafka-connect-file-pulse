@@ -18,10 +18,10 @@
  */
 package io.streamthoughts.kafka.connect.filepulse.filter;
 
-import static io.streamthoughts.kafka.connect.filepulse.config.NamingConvention.buildRenameStrategyNotFoundErrorMsg;
+import static io.streamthoughts.kafka.connect.filepulse.config.NamingConvention.namingConventionNotFoundErrorMsg;
 
-import io.streamthoughts.kafka.connect.filepulse.config.NamingConventionFilterConfig;
 import io.streamthoughts.kafka.connect.filepulse.config.NamingConvention;
+import io.streamthoughts.kafka.connect.filepulse.config.NamingConventionFilterConfig;
 import io.streamthoughts.kafka.connect.filepulse.data.TypedField;
 import io.streamthoughts.kafka.connect.filepulse.data.TypedStruct;
 import io.streamthoughts.kafka.connect.filepulse.reader.RecordsIterable;
@@ -58,20 +58,20 @@ public class NamingConventionFilter extends AbstractRecordFilter<NamingConventio
     public RecordsIterable<TypedStruct> apply(final FilterContext context,
                                               final TypedStruct record,
                                               final boolean hasNext) throws FilterException {
-        NamingConvention renameStrategy = NamingConvention.getByConfigValue(config.getDefaultRenameStrategy());
+        NamingConvention namingConvention = NamingConvention.getByConfigValue(config.getDefaultNamingConvention());
         Iterator<TypedField> typedFieldsIterator = record.schema().iterator();
 
         StreamSupport.stream(
                         Spliterators.spliteratorUnknownSize(typedFieldsIterator, Spliterator.ORDERED), false)
                 .map(TypedField::name)
-                .peek(name -> LOG.trace("Renaming field {} to {}", name, renameColumn(name, renameStrategy)))
-                .forEach(name -> record.rename(name, renameColumn(name, renameStrategy)));
+                .peek(name -> LOG.trace("Renaming field {} to {}", name, renameField(name, namingConvention)))
+                .forEach(name -> record.rename(name, renameField(name, namingConvention)));
 
         return new RecordsIterable<>(record);
     }
 
-    String renameColumn(String columnName, NamingConvention renameStrategy) {
-        switch (renameStrategy) {
+    String renameField(String columnName, NamingConvention namingConvention) {
+        switch (namingConvention) {
             case CAMEL_CASE:
                 return toCamelCase(columnName);
             case PASCAL_CASE:
@@ -79,7 +79,7 @@ public class NamingConventionFilter extends AbstractRecordFilter<NamingConventio
             case SNAKE_CASE:
                 return toSnakeCase(columnName);
             default:
-                throw new ConfigException(buildRenameStrategyNotFoundErrorMsg(renameStrategy.getConfigValue()));
+                throw new ConfigException(namingConventionNotFoundErrorMsg(namingConvention.getConfigValue()));
         }
     }
 

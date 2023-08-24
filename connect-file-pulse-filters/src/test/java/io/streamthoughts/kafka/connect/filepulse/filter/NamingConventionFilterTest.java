@@ -18,8 +18,8 @@
  */
 package io.streamthoughts.kafka.connect.filepulse.filter;
 
-import static io.streamthoughts.kafka.connect.filepulse.config.NamingConventionFilterConfig.CSV_DEFAULT_COLUMN_RENAME_DELIMITER_CONFIG;
-import static io.streamthoughts.kafka.connect.filepulse.config.NamingConventionFilterConfig.CSV_DEFAULT_COLUMN_RENAME_STRATEGY_CONFIG;
+import static io.streamthoughts.kafka.connect.filepulse.config.NamingConventionFilterConfig.DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG;
+import static io.streamthoughts.kafka.connect.filepulse.config.NamingConventionFilterConfig.DEFAULT_FIELD_NAMING_CONVENTION;
 import static io.streamthoughts.kafka.connect.filepulse.config.NamingConvention.CAMEL_CASE;
 import static io.streamthoughts.kafka.connect.filepulse.config.NamingConvention.PASCAL_CASE;
 import static io.streamthoughts.kafka.connect.filepulse.config.NamingConvention.SNAKE_CASE;
@@ -51,7 +51,7 @@ public class NamingConventionFilterTest {
                                                                                    NamingConvention renameStrategy) {
         NamingConventionFilter namingConventionFilter = new NamingConventionFilter();
         namingConventionFilter.configure(emptyMap());
-        Assertions.assertEquals(renamedColumnName, namingConventionFilter.renameColumn(originalColumnName, renameStrategy));
+        Assertions.assertEquals(renamedColumnName, namingConventionFilter.renameField(originalColumnName, renameStrategy));
     }
 
     public static Stream<Arguments> when_given_column_name_should_convert_to_correct_format_based_on_strategy() {
@@ -105,8 +105,8 @@ public class NamingConventionFilterTest {
     void when_apply_method_is_called_then_record_should_contain_renamed_columns(String configValue, String[] renamedColumnNames) {
         NamingConventionFilter renameStrategyFilter = new NamingConventionFilter();
         renameStrategyFilter.configure(of(
-                CSV_DEFAULT_COLUMN_RENAME_STRATEGY_CONFIG, configValue,
-                CSV_DEFAULT_COLUMN_RENAME_DELIMITER_CONFIG, "_"));
+                DEFAULT_FIELD_NAMING_CONVENTION, configValue,
+                DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG, "_"));
         RecordsIterable<TypedStruct> recordsIterable = renameStrategyFilter.apply(mock(FilterContext.class), buildInputRecord(), false);
 
         List<String> renamedFieldNames = extractRenamedFiledNames(recordsIterable);
@@ -116,9 +116,9 @@ public class NamingConventionFilterTest {
 
     public static Stream<Arguments> when_apply_method_is_called_then_record_should_contain_renamed_columns() {
         return Stream.of(
-                arguments(CAMEL_CASE.getConfigValue(), Fixture.renamedColumnsCamelCase),
-                arguments(PASCAL_CASE.getConfigValue(), Fixture.renamedColumnsPascalCase),
-                arguments(SNAKE_CASE.getConfigValue(), Fixture.renamedColumnsSnakeCase));
+                arguments(CAMEL_CASE.getConfigValue(), Fixture.renamedFieldsCamelCase),
+                arguments(PASCAL_CASE.getConfigValue(), Fixture.renamedFieldsPascalCase),
+                arguments(SNAKE_CASE.getConfigValue(), Fixture.renamedFieldsSnakeCase));
     }
 
     private static List<String> extractRenamedFiledNames(RecordsIterable<TypedStruct> recordsIterable) {
@@ -159,7 +159,7 @@ public class NamingConventionFilterTest {
         String urlFieldRenamedCamelCase = "url";
         String searchEngineFieldRenamedCamelCase = "searchEngine";
 
-        String[] renamedColumnsCamelCase = { idFieldRenamedCamelCase, referrerFieldRenamedCamelCase, requestIdFieldRenamedCamelCase,
+        String[] renamedFieldsCamelCase = { idFieldRenamedCamelCase, referrerFieldRenamedCamelCase, requestIdFieldRenamedCamelCase,
                 searchEngineFieldRenamedCamelCase, timesFieldRenamedCamelCase, urlFieldRenamedCamelCase
         };
 
@@ -171,7 +171,7 @@ public class NamingConventionFilterTest {
         String searchEngineFieldRenamedPascalCase = "SearchEngine";
 
 
-        String[] renamedColumnsPascalCase = {idFieldRenamedPascalCase, referrerFieldRenamedPascalCase, requestIdFieldRenamedPascalCase,
+        String[] renamedFieldsPascalCase = {idFieldRenamedPascalCase, referrerFieldRenamedPascalCase, requestIdFieldRenamedPascalCase,
                 searchEngineFieldRenamedPascalCase, timesFieldRenamedPascalCase, urlFieldRenamedPascalCase
         };
 
@@ -182,7 +182,7 @@ public class NamingConventionFilterTest {
         String urlFieldRenamedSnakeCase = "url";
         String searchEngineFieldRenamedSnakeCase = "search_engine";
 
-        String[] renamedColumnsSnakeCase = {idFieldRenamedSnakeCase, referrerFieldRenamedSnakeCase, requestIdFieldRenamedSnakeCase,
+        String[] renamedFieldsSnakeCase = {idFieldRenamedSnakeCase, referrerFieldRenamedSnakeCase, requestIdFieldRenamedSnakeCase,
                 searchEngineFieldRenamedSnakeCase, timesFieldRenamedSnakeCase, urlFieldRenamedSnakeCase};
     }
 }

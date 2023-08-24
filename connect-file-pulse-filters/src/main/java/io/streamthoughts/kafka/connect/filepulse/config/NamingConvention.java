@@ -25,7 +25,7 @@ public enum NamingConvention {
     CAMEL_CASE("camelCase"),
     PASCAL_CASE("pascalCase"),
     SNAKE_CASE("snakeCase");
-    private static final String RENAME_STRATEGY_NOT_FOUND_ERROR_MSG_TEMPLATE = "Rename strategy: %s does not exist";
+    private static final String NAMING_CONVENTION_NOT_FOUND_ERROR_MSG_TEMPLATE = "Naming Convention: %s does not exist";
     private final String configValue;
 
     NamingConvention(String configValue) {
@@ -36,14 +36,14 @@ public enum NamingConvention {
         return Arrays.stream(values())
                 .filter(e -> e.configValue.equals(searchedConfigValue))
                 .findAny()
-                .orElseThrow(() -> new ConfigException(buildRenameStrategyNotFoundErrorMsg(searchedConfigValue)));
+                .orElseThrow(() -> new ConfigException(namingConventionNotFoundErrorMsg(searchedConfigValue)));
     }
 
     public String getConfigValue() {
         return configValue;
     }
 
-    public static String buildRenameStrategyNotFoundErrorMsg(String strategyName) {
-        return String.format(RENAME_STRATEGY_NOT_FOUND_ERROR_MSG_TEMPLATE, strategyName);
+    public static String namingConventionNotFoundErrorMsg(String strategyName) {
+        return String.format(NAMING_CONVENTION_NOT_FOUND_ERROR_MSG_TEMPLATE, strategyName);
     }
 }

@@ -26,10 +26,10 @@ import org.apache.kafka.common.config.ConfigDef;
 
 
 public class NamingConventionFilterConfig extends AbstractConfig {
-    public static final String CSV_DEFAULT_COLUMN_RENAME_STRATEGY_CONFIG = "csv.default.column.header.rename.strategy";
-    public static final String CSV_DEFAULT_COLUMN_RENAME_DELIMITER_CONFIG = "csv.default.column.header.rename.delimiter";
-    private static final String CSV_DEFAULT_COLUMN_RENAME_STRATEGY_DOC = "Default csv column header rename strategy, possible flavours are: camelCase, snakeCase, pascalCase";
-    private static final String CSV_DEFAULT_COLUMN_RENAME_DELIMITER_DOC_TEMPLATE = "Set of characters to determine capitalization of the header, default value is %s";
+    public static final String DEFAULT_FIELD_NAMING_CONVENTION = "default.field.naming.convention";
+    public static final String DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG = "default.field.naming.convention.delimiter";
+    private static final String DEFAULT_FIELD_NAMING_CONVENTION_DOC = "Default field naming convention, possible values are: camelCase, snakeCase, pascalCase";
+    private static final String DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_DOC_TEMPLATE = "Set of characters to determine casing of the field, default values are %s";
 
     private static final String defaultDelimiter = "_ ,-()[]{}";
 
@@ -37,25 +37,25 @@ public class NamingConventionFilterConfig extends AbstractConfig {
         super(getConfigDef(), originals);
     }
 
-    public String getDefaultRenameStrategy() {
-        return getString(CSV_DEFAULT_COLUMN_RENAME_STRATEGY_CONFIG);
+    public String getDefaultNamingConvention() {
+        return getString(DEFAULT_FIELD_NAMING_CONVENTION);
     }
 
     public char[] getColumnHeaderDelimiters() {
-        return getString(CSV_DEFAULT_COLUMN_RENAME_DELIMITER_CONFIG).toCharArray();
+        return getString(DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG).toCharArray();
     }
 
     public static ConfigDef getConfigDef() {
         return new ConfigDef()
-                .define(CSV_DEFAULT_COLUMN_RENAME_STRATEGY_CONFIG,
+                .define(DEFAULT_FIELD_NAMING_CONVENTION,
                         ConfigDef.Type.STRING,
                         CAMEL_CASE.getConfigValue(),
                         ConfigDef.Importance.HIGH,
-                        CSV_DEFAULT_COLUMN_RENAME_STRATEGY_DOC)
-                .define(CSV_DEFAULT_COLUMN_RENAME_DELIMITER_CONFIG,
+                        DEFAULT_FIELD_NAMING_CONVENTION_DOC)
+                .define(DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG,
                         ConfigDef.Type.STRING,
                         defaultDelimiter,
                         ConfigDef.Importance.HIGH,
-                        String.format(CSV_DEFAULT_COLUMN_RENAME_DELIMITER_DOC_TEMPLATE, defaultDelimiter));
+                        String.format(DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_DOC_TEMPLATE, defaultDelimiter));
     }
 }

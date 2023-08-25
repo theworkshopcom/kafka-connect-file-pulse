@@ -21,7 +21,7 @@ package io.streamthoughts.kafka.connect.filepulse.filter;
 import static io.streamthoughts.kafka.connect.filepulse.config.NamingConvention.namingConventionNotFoundErrorMsg;
 
 import io.streamthoughts.kafka.connect.filepulse.config.NamingConvention;
-import io.streamthoughts.kafka.connect.filepulse.config.NamingConventionFilterConfig;
+import io.streamthoughts.kafka.connect.filepulse.config.NamingConventionRenameFilterConfig;
 import io.streamthoughts.kafka.connect.filepulse.data.TypedField;
 import io.streamthoughts.kafka.connect.filepulse.data.TypedStruct;
 import io.streamthoughts.kafka.connect.filepulse.reader.RecordsIterable;
@@ -38,20 +38,20 @@ import org.slf4j.LoggerFactory;
 
 
 
-public class NamingConventionFilter extends AbstractRecordFilter<NamingConventionFilter> {
+public class NamingConventionRenameFilter extends AbstractRecordFilter<NamingConventionRenameFilter> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(NamingConventionFilter.class);
-    private NamingConventionFilterConfig config;
+    private static final Logger LOG = LoggerFactory.getLogger(NamingConventionRenameFilter.class);
+    private NamingConventionRenameFilterConfig config;
 
     @Override
     public void configure(final Map<String, ?> props) {
         super.configure(props);
-        config = new NamingConventionFilterConfig(props);
+        config = new NamingConventionRenameFilterConfig(props);
     }
 
     @Override
     public ConfigDef configDef() {
-        return NamingConventionFilterConfig.getConfigDef();
+        return NamingConventionRenameFilterConfig.getConfigDef();
     }
 
     @Override

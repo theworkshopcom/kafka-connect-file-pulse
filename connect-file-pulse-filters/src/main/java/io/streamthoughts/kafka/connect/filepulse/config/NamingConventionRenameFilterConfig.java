@@ -25,7 +25,7 @@ import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 
 
-public class NamingConventionFilterConfig extends AbstractConfig {
+public class NamingConventionRenameFilterConfig extends AbstractConfig {
     public static final String DEFAULT_FIELD_NAMING_CONVENTION = "default.field.naming.convention";
     public static final String DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG = "default.field.naming.convention.delimiter";
     private static final String DEFAULT_FIELD_NAMING_CONVENTION_DOC = "Default field naming convention, possible values are: camelCase, snakeCase, pascalCase";
@@ -33,7 +33,7 @@ public class NamingConventionFilterConfig extends AbstractConfig {
 
     private static final String defaultDelimiter = "_ ,-()[]{}";
 
-    public NamingConventionFilterConfig(Map<?, ?> originals) {
+    public NamingConventionRenameFilterConfig(Map<?, ?> originals) {
         super(getConfigDef(), originals);
     }
 

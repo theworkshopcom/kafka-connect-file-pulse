@@ -18,13 +18,15 @@
  */
 package io.streamthoughts.kafka.connect.filepulse.filter;
 
-import static io.streamthoughts.kafka.connect.filepulse.config.NamingConventionFilterConfig.DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG;
-import static io.streamthoughts.kafka.connect.filepulse.config.NamingConventionFilterConfig.DEFAULT_FIELD_NAMING_CONVENTION;
+import static io.streamthoughts.kafka.connect.filepulse.config.NamingConventionRenameFilterConfig.DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG;
+import static io.streamthoughts.kafka.connect.filepulse.config.NamingConventionRenameFilterConfig.DEFAULT_FIELD_NAMING_CONVENTION;
 import static io.streamthoughts.kafka.connect.filepulse.config.NamingConvention.CAMEL_CASE;
 import static io.streamthoughts.kafka.connect.filepulse.config.NamingConvention.PASCAL_CASE;
 import static io.streamthoughts.kafka.connect.filepulse.config.NamingConvention.SNAKE_CASE;
 import static java.util.Collections.emptyMap;
 import static java.util.Map.of;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
@@ -43,15 +45,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class NamingConventionFilterTest {
+public class NamingConventionRenameFilterTest {
     @ParameterizedTest
     @MethodSource
     void when_given_column_name_should_convert_to_correct_format_based_on_strategy(String originalColumnName,
                                                                                    String renamedColumnName,
                                                                                    NamingConvention renameStrategy) {
-        NamingConventionFilter namingConventionFilter = new NamingConventionFilter();
-        namingConventionFilter.configure(emptyMap());
-        Assertions.assertEquals(renamedColumnName, namingConventionFilter.renameField(originalColumnName, renameStrategy));
+        NamingConventionRenameFilter namingConventionRenameFilter = new NamingConventionRenameFilter();
+        namingConventionRenameFilter.configure(emptyMap());
+        assertEquals(renamedColumnName, namingConventionRenameFilter.renameField(originalColumnName, renameStrategy));
     }
 
     public static Stream<Arguments> when_given_column_name_should_convert_to_correct_format_based_on_strategy() {
@@ -85,7 +87,7 @@ public class NamingConventionFilterTest {
     @ParameterizedTest
     @MethodSource
     void when_given_config_value_should_retrieve_the_correct_rename_strategy_enum(String configValue, NamingConvention renameStrategy) {
-        Assertions.assertEquals(renameStrategy, NamingConvention.getByConfigValue(configValue));
+        assertEquals(renameStrategy, NamingConvention.getByConfigValue(configValue));
     }
 
     public static Stream<Arguments> when_given_config_value_should_retrieve_the_correct_rename_strategy_enum() {
@@ -103,7 +105,7 @@ public class NamingConventionFilterTest {
     @ParameterizedTest
     @MethodSource
     void when_apply_method_is_called_then_record_should_contain_renamed_columns(String configValue, String[] renamedColumnNames) {
-        NamingConventionFilter renameStrategyFilter = new NamingConventionFilter();
+        NamingConventionRenameFilter renameStrategyFilter = new NamingConventionRenameFilter();
         renameStrategyFilter.configure(of(
                 DEFAULT_FIELD_NAMING_CONVENTION, configValue,
                 DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG, "_"));
@@ -111,7 +113,7 @@ public class NamingConventionFilterTest {
 
         List<String> renamedFieldNames = extractRenamedFiledNames(recordsIterable);
 
-        Assertions.assertArrayEquals(renamedColumnNames, renamedFieldNames.toArray());
+        assertArrayEquals(renamedColumnNames, renamedFieldNames.toArray());
     }
 
     public static Stream<Arguments> when_apply_method_is_called_then_record_should_contain_renamed_columns() {

@@ -25,6 +25,7 @@ public enum NamingConvention {
     CAMEL_CASE("camelCase"),
     PASCAL_CASE("pascalCase"),
     SNAKE_CASE("snakeCase");
+
     private static final String NAMING_CONVENTION_NOT_FOUND_ERROR_MSG_TEMPLATE = "Naming Convention: %s does not exist";
     private final String configValue;
 

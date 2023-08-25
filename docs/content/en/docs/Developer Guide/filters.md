@@ -9,28 +9,29 @@ description: >
 
 These filters are available for use with Kafka Connect File Pulse:
 
-| Filter                                    | Description                                                                              | Since    |
-|-------------------------------------------|------------------------------------------------------------------------------------------|----------|
-| [AppendFilter](#appendfilter)             | Appends one or more values to an existing or non-existing array field                    |          |
-| [ConvertFilter](#convertfilter)           | Converts a message field's value to a specific type                                      |          |
-| [CSVFilter](#csvfilter)                   | Parses a message field's value containing columns delimited by a character into a struct | `v2.7.0` |
-| [DateFilter](#datefilter)                 | Converts a field's value containing a date to a unix epoch time                          |          |
-| [DelimitedRowFilter](#delimitedrowfilter) | Parses a message field's value containing columns delimited by a regex into a struct     |          |
-| [DropFilter](#dropfilter)                 | Drops messages satisfying a specific condition without throwing exception.               |          |
-| [ExcludeFilter](#excludefilter)           | Excludes one or more fields from the input record.                                       | `v1.4.0` |
-| [ExplodeFilter](#explodefilter)           | Explodes an array or list field into separate records.                                   | `v1.4.0` |
-| [FailFilter](#failfilter)                 | Throws an exception when a message satisfy a specific condition                          |          |
-| [GrokFilter](#grokfilter)                 | Parses an unstructured message field's value to a struct by combining Grok patterns      |          |
-| [GroupRowFilter](#grouprowfilter)         | Regroups multiple following messages into a single message by composing a grouping key   |          |
-| [JoinFilter](#joinfilter)                 | Joins values of an array field with a specified separator                                |          |
-| [JSONFilter](#jsonfilter)                 | Unmarshalling a JSON message field's value to a complex struct                           |          |
-| [MoveFilter](#movefilter)                 | Moves an existing record field's value to a specific target path                         | `v1.5.0` |
-| [MultiRowFilter](#multirowfilter)         | Combines following message lines into single one by combining patterns                   |          |
-| [NullValueFilter](#nullvaluefilter)       | Combines following message lines into single one by combining patterns                   | `v2.3.0` |
-| [RenameFilter](#renamefilter)             | Renames a message field                                                                  |          |
-| [SplitFilter](#splitfilter)               | Splits a message field's value to array                                                  |          |
-| [XmlToJsonFilter](#xmltojsonfilter)       | Parses an XML record-field and convert it to a JSON string                               | `v2.4.0` |
-| [XmlToStructFilter](#xmltostructfilter)   | Parses an XML record-field into STRUCT                                                   | `v2.4.0` |
+| Filter                                                        | Description                                                                              | Since     |
+|---------------------------------------------------------------|------------------------------------------------------------------------------------------|-----------|
+| [AppendFilter](#appendfilter)                                 | Appends one or more values to an existing or non-existing array field                    |           |
+| [ConvertFilter](#convertfilter)                               | Converts a message field's value to a specific type                                      |           |
+| [CSVFilter](#csvfilter)                                       | Parses a message field's value containing columns delimited by a character into a struct | `v2.7.0`  |
+| [DateFilter](#datefilter)                                     | Converts a field's value containing a date to a unix epoch time                          |           |
+| [DelimitedRowFilter](#delimitedrowfilter)                     | Parses a message field's value containing columns delimited by a regex into a struct     |           |
+| [DropFilter](#dropfilter)                                     | Drops messages satisfying a specific condition without throwing exception.               |           |
+| [ExcludeFilter](#excludefilter)                               | Excludes one or more fields from the input record.                                       | `v1.4.0`  |
+| [ExplodeFilter](#explodefilter)                               | Explodes an array or list field into separate records.                                   | `v1.4.0`  |
+| [FailFilter](#failfilter)                                     | Throws an exception when a message satisfy a specific condition                          |           |
+| [GrokFilter](#grokfilter)                                     | Parses an unstructured message field's value to a struct by combining Grok patterns      |           |
+| [GroupRowFilter](#grouprowfilter)                             | Regroups multiple following messages into a single message by composing a grouping key   |           |
+| [JoinFilter](#joinfilter)                                     | Joins values of an array field with a specified separator                                |           |
+| [JSONFilter](#jsonfilter)                                     | Unmarshalling a JSON message field's value to a complex struct                           |           |
+| [MoveFilter](#movefilter)                                     | Moves an existing record field's value to a specific target path                         | `v1.5.0`  |
+| [NamingConventionRenameFilter](#namingConventionRenamefilter) | Renames all fields in the struct to conform with a specific naming convention            | `v2.13.0` |
+| [MultiRowFilter](#multirowfilter)                             | Combines following message lines into single one by combining patterns                   |           |
+| [NullValueFilter](#nullvaluefilter)                           | Combines following message lines into single one by combining patterns                   | `v2.3.0`  |
+| [RenameFilter](#renamefilter)                                 | Renames a message field                                                                  |           |
+| [SplitFilter](#splitfilter)                                   | Splits a message field's value to array                                                  |           |
+| [XmlToJsonFilter](#xmltojsonfilter)                           | Parses an XML record-field and convert it to a JSON string                               | `v2.4.0`  |
+| [XmlToStructFilter](#xmltostructfilter)                       | Parses an XML record-field into STRUCT                                                   | `v2.4.0`  |
 
 ## AppendFilter
 
@@ -672,6 +673,28 @@ filters.MyMoveFilter.target=moved
     "moved": "foo"
   }
 }
+```
+
+## NamingConventionRenamefilter
+
+The following provides usage information for : `io.streamthoughts.kafka.connect.filepulse.filter.NamingConventionRenameFilter`.
+
+The `NamingConventionRenameFilter` renames all fields in the struct to conform with a specific naming convention.
+
+### Configuration
+
+| Configuration                            | Description                                                                          | Type    | Default      | Importance |
+|------------------------------------------|--------------------------------------------------------------------------------------|---------|--------------|------------|
+| `naming.convention`                      | The naming convetion to follow possible values are: camelCase, snakeCase, pascalCase | string  | *camelCase*  | high       |
+| `delimiter`                              | Set of characters to determine casing of the field                                   | string  | *_ ,-()[]{}* | high       |
+
+### Examples
+
+```properties
+filters=NormaliseFields
+filters.NormaliseFields.type=io.streamthoughts.kafka.connect.filepulse.filter.NamingConventionRenameFilter
+filters.NormaliseFields.naming.convention=snakeCase
+filters.NormaliseFields.delimiter=renamed
 ```
 
 ## NullValueFilter

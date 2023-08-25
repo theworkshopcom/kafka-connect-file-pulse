@@ -18,11 +18,11 @@
  */
 package io.streamthoughts.kafka.connect.filepulse.filter;
 
-import static io.streamthoughts.kafka.connect.filepulse.config.NamingConventionRenameFilterConfig.DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG;
-import static io.streamthoughts.kafka.connect.filepulse.config.NamingConventionRenameFilterConfig.DEFAULT_FIELD_NAMING_CONVENTION;
 import static io.streamthoughts.kafka.connect.filepulse.config.NamingConvention.CAMEL_CASE;
 import static io.streamthoughts.kafka.connect.filepulse.config.NamingConvention.PASCAL_CASE;
 import static io.streamthoughts.kafka.connect.filepulse.config.NamingConvention.SNAKE_CASE;
+import static io.streamthoughts.kafka.connect.filepulse.config.NamingConventionRenameFilterConfig.FIELD_NAMING_CONVENTION_CONFIG;
+import static io.streamthoughts.kafka.connect.filepulse.config.NamingConventionRenameFilterConfig.FIELD_NAMING_CONVENTION_DELIMITER_CONFIG;
 import static java.util.Collections.emptyMap;
 import static java.util.Map.of;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.kafka.common.config.ConfigException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -107,8 +106,8 @@ public class NamingConventionRenameFilterTest {
     void when_apply_method_is_called_then_record_should_contain_renamed_columns(String configValue, String[] renamedColumnNames) {
         NamingConventionRenameFilter renameStrategyFilter = new NamingConventionRenameFilter();
         renameStrategyFilter.configure(of(
-                DEFAULT_FIELD_NAMING_CONVENTION, configValue,
-                DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG, "_"));
+                FIELD_NAMING_CONVENTION_CONFIG, configValue,
+                FIELD_NAMING_CONVENTION_DELIMITER_CONFIG, "_"));
         RecordsIterable<TypedStruct> recordsIterable = renameStrategyFilter.apply(mock(FilterContext.class), buildInputRecord(), false);
 
         List<String> renamedFieldNames = extractRenamedFiledNames(recordsIterable);

@@ -26,36 +26,35 @@ import org.apache.kafka.common.config.ConfigDef;
 
 
 public class NamingConventionRenameFilterConfig extends AbstractConfig {
-    public static final String DEFAULT_FIELD_NAMING_CONVENTION = "default.field.naming.convention";
-    public static final String DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG = "default.field.naming.convention.delimiter";
-    private static final String DEFAULT_FIELD_NAMING_CONVENTION_DOC = "Default field naming convention, possible values are: camelCase, snakeCase, pascalCase";
-    private static final String DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_DOC_TEMPLATE = "Set of characters to determine casing of the field, default values are %s";
-
-    private static final String defaultDelimiter = "_ ,-()[]{}";
+    public static final String FIELD_NAMING_CONVENTION_CONFIG = "naming.convention";
+    private static final String FIELD_NAMING_CONVENTION_DOC = "Default field naming convention, possible values are: camelCase, snakeCase, pascalCase";
+    public static final String FIELD_NAMING_CONVENTION_DELIMITER_CONFIG = "delimiter";
+    private static final String FIELD_NAMING_CONVENTION_DELIMITER_DOC_TEMPLATE = "Set of characters to determine casing of the field, default values are %s";
+    private static final String FIELD_NAMING_CONVENTION_DELIMITER_DEFAULT = "_ ,-()[]{}";
 
     public NamingConventionRenameFilterConfig(Map<?, ?> originals) {
         super(getConfigDef(), originals);
     }
 
     public String getDefaultNamingConvention() {
-        return getString(DEFAULT_FIELD_NAMING_CONVENTION);
+        return getString(FIELD_NAMING_CONVENTION_CONFIG);
     }
 
     public char[] getColumnHeaderDelimiters() {
-        return getString(DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG).toCharArray();
+        return getString(FIELD_NAMING_CONVENTION_DELIMITER_CONFIG).toCharArray();
     }
 
     public static ConfigDef getConfigDef() {
         return new ConfigDef()
-                .define(DEFAULT_FIELD_NAMING_CONVENTION,
+                .define(FIELD_NAMING_CONVENTION_CONFIG,
                         ConfigDef.Type.STRING,
                         CAMEL_CASE.getConfigValue(),
                         ConfigDef.Importance.HIGH,
-                        DEFAULT_FIELD_NAMING_CONVENTION_DOC)
-                .define(DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_CONFIG,
+                        FIELD_NAMING_CONVENTION_DOC)
+                .define(FIELD_NAMING_CONVENTION_DELIMITER_CONFIG,
                         ConfigDef.Type.STRING,
-                        defaultDelimiter,
+                        FIELD_NAMING_CONVENTION_DELIMITER_DEFAULT,
                         ConfigDef.Importance.HIGH,
-                        String.format(DEFAULT_FIELD_NAMING_CONVENTION_DELIMITER_DOC_TEMPLATE, defaultDelimiter));
+                        String.format(FIELD_NAMING_CONVENTION_DELIMITER_DOC_TEMPLATE, FIELD_NAMING_CONVENTION_DELIMITER_DEFAULT));
     }
 }
